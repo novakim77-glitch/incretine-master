@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Incretin Master Pro: Advanced v2.5.1</title>
+    <title>IncretinA i Pro: Clinical Master Edition</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
@@ -23,35 +23,47 @@
         }
         .help-btn:hover { transform: scale(1.1) rotate(5deg); }
 
-        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; width: 100%; }
-        .stat-item { background: white; padding: 15px; border-radius: 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; }
-        .stat-val { display: block; font-size: 1.4rem; font-weight: 800; color: var(--primary); }
-        .stat-lbl { font-size: 0.75rem; color: var(--gray); font-weight: 600; margin-bottom: 4px; display: block; }
+        /* 실시간 지표 대시보드 */
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 25px; width: 100%; }
+        .stat-item { background: white; padding: 15px; border-radius: 20px; text-align: center; border: 1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        .stat-val { display: block; font-size: 1.2rem; font-weight: 800; color: var(--primary); }
+        .stat-lbl { font-size: 0.65rem; color: var(--gray); font-weight: 700; margin-bottom: 4px; display: block; }
 
+        /* AI 넛지 카드 */
         .ai-card { background: white; border-radius: 24px; padding: 25px; margin-bottom: 25px; border: 2px solid var(--primary); box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1); width: 100%; box-sizing: border-box; }
         .ai-title { font-weight: 800; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; }
-        .ai-content { background: #f8fafc; padding: 15px; border-radius: 12px; font-size: 0.9rem; line-height: 1.6; border-left: 4px solid var(--primary); }
+        .ai-content { background: #f8fafc; padding: 15px; border-radius: 12px; font-size: 0.95rem; line-height: 1.6; border-left: 4px solid var(--primary); font-style: italic; }
 
+        /* 시각화 대시보드 */
         .dashboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; width: 100%; }
         .chart-card { background: white; border-radius: 24px; padding: 20px; border: 2px solid #e2e8f0; }
         .chart-title { font-size: 0.8rem; font-weight: 800; margin-bottom: 10px; display: block; color: var(--gray); }
 
+        /* 입력 및 리스트 */
         .glass-card { background: white; border-radius: 24px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px; width: 100%; box-sizing: border-box; }
-        .profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 20px; }
         .input-group label { font-size: 0.7rem; font-weight: 700; color: var(--gray); display: block; margin-bottom: 5px; }
         input, select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; font-family: inherit; font-weight: 600; box-sizing: border-box; }
 
-        .item { background: white; border-radius: 20px; padding: 18px; margin-bottom: 12px; display: flex; gap: 12px; border-left: 6px solid #cbd5e1; cursor: pointer; transition: 0.3s; position: relative; }
+        .item { background: white; border-radius: 20px; padding: 18px; margin-bottom: 12px; display: flex; gap: 12px; border-left: 6px solid #cbd5e1; cursor: pointer; transition: 0.2s; position: relative; }
         .item.checked { background: #f0fdf4; border-left-color: var(--success); }
         .item.critical { border-left-color: var(--danger); }
+        
+        .score-badge { position: absolute; right: 15px; top: 15px; background: #f1f5f9; padding: 4px 8px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; color: var(--gray); }
+        .checked .score-badge { background: var(--success); color: white; }
 
-        .btn { padding: 16px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; transition: 0.3s; color: white; text-align: center; }
+        .btn { padding: 16px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; color: white; text-align: center; }
         .btn-primary { background: var(--primary); width: 100%; }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: white; width: 95%; max-width: 600px; padding: 30px; border-radius: 24px; max-height: 80vh; overflow-y: auto; }
-        .guide-h { font-size: 1.1rem; font-weight: 800; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 5px; margin: 20px 0 10px; }
-        .guide-sec { font-size: 0.9rem; line-height: 1.6; margin-bottom: 15px; }
+        /* 가이드 모달 고도화 */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: white; width: 95%; max-width: 700px; padding: 35px; border-radius: 32px; max-height: 85vh; overflow-y: auto; }
+        .guide-step { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; }
+        .guide-time { color: var(--primary); font-weight: 800; font-size: 1.2rem; margin-bottom: 5px; display: block; }
+        .guide-title { font-size: 1.1rem; font-weight: 800; color: var(--dark); margin-bottom: 10px; display: block; }
+        .guide-box { background: #f8fafc; padding: 15px; border-radius: 15px; border-left: 4px solid var(--accent); }
+        .guide-label { font-size: 0.75rem; font-weight: 800; color: var(--gray); text-transform: uppercase; margin-bottom: 4px; display: block; }
+        .guide-text { font-size: 0.9rem; line-height: 1.6; color: #334155; }
 
         @media print { .no-print { display: none !important; } }
     </style>
@@ -61,10 +73,10 @@
 <div class="container">
     <header>
         <div>
-            <h1 style="color: var(--primary); margin: 0; font-size: 1.6rem;">🧬 인크레틴 마스터 Pro</h1>
-            <p style="color: var(--gray); font-size: 0.85rem; margin-top: 5px;">v2.5 Precision Analytics & Clinical Logic</p>
+            <h1 style="color: var(--primary); margin: 0; font-size: 1.5rem;">🧬 IncretinA i Pro</h1>
+            <p style="color: var(--gray); font-size: 0.8rem; margin-top: 5px;">v2.6 Precision Clinical Edition</p>
         </div>
-        <button class="help-btn no-print" onclick="toggleHelpModal()" title="정밀 행동 설계 가이드">
+        <button class="help-btn no-print" onclick="toggleModal('help-modal')">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A5 5 0 0 0 8 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"></path><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line></svg>
         </button>
     </header>
@@ -72,23 +84,24 @@
     <div class="stat-grid no-print">
         <div class="stat-item"><span class="stat-lbl">현재 BMI</span><span class="stat-val" id="bmi-v">0.0</span></div>
         <div class="stat-item"><span class="stat-lbl">목표 달성률</span><span class="stat-val" id="ach-v" style="color:var(--danger);">0%</span></div>
-        <div class="stat-item"><span class="stat-lbl">주간 순응도</span><span class="stat-val" id="avg-v" style="color:var(--success);">0</span></div>
+        <div class="stat-item"><span class="stat-lbl">순응도 점수</span><span class="stat-val" id="today-score">0</span></div>
+        <div class="stat-item"><span class="stat-lbl">지방연소 가속</span><span class="stat-val" id="burn-rate" style="color:var(--success);">0%</span></div>
     </div>
 
     <div class="ai-card">
-        <div class="ai-title">🩺 인크레틴 AI 행동 처방</div>
-        <div id="ai-rx" class="ai-content">데이터를 입력하면 임상 모델 기반 분석이 시작됩니다.</div>
+        <div class="ai-title">
+            <select id="ai-persona" onchange="updateAIStatus()" style="border:none; font-weight:800; color:var(--primary); background:transparent; font-size:1.1rem; cursor:pointer;">
+                <option value="clinical">🔬 임상 전문가 처방</option>
+                <option value="driver">🔥 결과 지향 코칭</option>
+                <option value="empathetic">🤝 공감 파트너 넛지</option>
+            </select>
+        </div>
+        <div id="ai-nudge" class="ai-content">데이터 분석을 위해 루틴을 기록해 주세요.</div>
     </div>
 
     <div class="dashboard-grid no-print">
-        <div class="chart-card" id="sim-view" style="display:none; border-color: var(--success);">
-            <span class="chart-title">📉 4주 예측 곡선</span>
-            <canvas id="simChart" height="200"></canvas>
-        </div>
-        <div class="chart-card" id="trend-view" style="display:none; border-color: var(--primary);">
-            <span class="chart-title">📈 실제 체중 추이</span>
-            <canvas id="trendChart" height="200"></canvas>
-        </div>
+        <div class="chart-card" id="sim-view" style="display:none; border-color: var(--success);"><span style="font-size:0.7rem; font-weight:800; color:var(--gray);">📉 IMEM 4주 예측</span><canvas id="simChart" height="200"></canvas></div>
+        <div class="chart-card" id="trend-view" style="display:none; border-color: var(--primary);"><span style="font-size:0.7rem; font-weight:800; color:var(--gray);">📈 실제 체중 추이</span><canvas id="trendChart" height="200"></canvas></div>
     </div>
 
     <div class="glass-card">
@@ -97,7 +110,7 @@
             <div class="input-group"><label>당뇨 유무</label><select id="p-diabetic"><option value="no">비당뇨인</option><option value="yes">당뇨(제2형)</option></select></div>
             <div class="input-group"><label>키 (cm)</label><input type="number" id="p-h" value="175"></div>
             <div class="input-group"><label>시작 체중(kg)</label><input type="number" id="p-sw" step="0.1" value="80"></div>
-            <div class="input-group"><label>현재 체중(kg)</label><input type="number" id="p-cw" step="0.1" value="78"></div>
+            <div class="input-group"><label>현재 체중(kg)</label><input type="number" id="p-cw" step="0.1" value="78.5"></div>
             <div class="input-group"><label>목표 체중(kg)</label><input type="number" id="p-gw" step="0.1" value="70"></div>
             <div class="input-group"><label>주간 운동(회)</label><input type="number" id="p-exercise" value="3"></div>
         </div>
@@ -116,112 +129,134 @@
 
 <div id="help-modal" class="modal">
     <div class="modal-content">
-        <h2 style="color:var(--primary); margin-top:0; display:flex; align-items:center; gap:10px;">💡 IMEM 정밀 행동 설계 가이드</h2>
-        <div id="modal-body-content"></div>
-        <button class="btn btn-primary" style="margin-top:20px;" onclick="toggleHelpModal()">가이드 닫기</button>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+            <h2 style="color:var(--primary); margin:0;">🔬 24h 정밀 대사 가이드</h2>
+            <button onclick="toggleModal('help-modal')" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <div id="modal-guide-body"></div>
     </div>
 </div>
 
 <script>
-    // [행동양식 및 핵심 기전 구체화]
+    // [24시간 정밀 루틴 데이터 - 가이드 본문 포함]
     const routine = [
         { 
-            t: "07:00", title: "생체 리듬 리셋", 
-            action: "기상 10분 내 직사광선 5분 노출 + 미온수 300ml 섭취", 
-            detail: "아침 햇살은 멜라토닌 분비를 즉시 차단하고 세로토닌 합성을 도와 생체 시계를 동기화합니다. 이는 오전 인크레틴 분비 민감도를 결정하는 기초 공사입니다.", 
-            pts: 5 
+            t: "07:00", title: "생체 리듬 리셋 (Circadian Sync)", pts: 5, 
+            action: "기상 10분 내 직사광선 5분 + 물 300ml", 
+            detail: "망막으로 유입된 햇빛은 멜라토닌을 차단하고 세로토닌 합성을 유도하여 뇌의 생체 시계를 동기화합니다. 이는 오전 인슐린 감수성을 높이고 GLP-1 분비 효율을 결정하는 기초 공사입니다." 
         },
         { 
-            t: "11:00", title: "호르몬 프리로드 (핵심)", 
-            action: "단백질 15g(달걀 2개 분량) 또는 PHGG 식이섬유 5g 섭취", 
-            detail: "식사 30분 전 유발 단백질은 소장 하부의 L-세포를 자극해 인크레틴을 선제적으로 분비시킵니다. 식후 혈당 스파이크를 방어하는 '호르몬 방파제' 역할을 합니다.", 
-            pts: 10, crit: true 
+            t: "08:30", title: "커피 대사 부스트 (Coffee Boost)", pts: 5, 
+            action: "업무 시작 전 무가당 블랙커피 1잔", 
+            detail: "커피의 클로로겐산은 소장 하부 L-세포를 자극해 내인성 GLP-1 분비를 예열합니다. 카페인은 교감신경을 자극해 갈색지방의 열 발생(Thermogenesis)을 유도합니다." 
         },
         { 
-            t: "11:30", title: "인크레틴 시퀀스 식사", 
-            action: "식이섬유(채소) → 단백질/지방 → 탄수화물 순서 고수", 
-            detail: "식이섬유가 위 배출 속도를 지연시키고 탄수화물 흡수 속도를 물리적으로 늦춰 인크레틴 효율을 30% 이상 높이며 지방 연소 모드를 유지합니다.", 
-            pts: 15, crit: true 
+            t: "09:00", title: "14h 단식 해제 (Fast Break)", pts: 10, 
+            action: "첫 음식 섭취 + 베르베린 복용", 
+            detail: "14시간 공복 후 인슐린 감수성이 정점일 때 베르베린을 투입하면 AMPK 효소가 강력하게 활성화되어 세포의 에너지 센서를 켜고 인슐린 저항성을 개선합니다." 
         },
         { 
-            t: "11:50", title: "글루코스 클리어런스 산책", 
-            action: "식후 40분 이내, 숨이 약간 찰 정도의 속보로 걷기", 
-            detail: "인슐린의 도움 없이도 근육의 GLUT4 수용체가 혈액 내 포도당을 직접 연소시키는 마법의 시간입니다. 40분 걷기는 헬스장 1시간보다 혈당 안정화에 강력합니다.", 
-            pts: 15, crit: true 
+            t: "11:00", title: "호르몬 프리로드 (Preload)", pts: 10, crit: true, 
+            action: "점심 30분 전 단백질 15g + PHGG 5g", 
+            detail: "식이섬유와 단백질이 소장에 먼저 도착하면 GLP-1이 선제 분비됩니다. 식사가 시작될 때 혈당 스파이크를 막는 '호르몬 방파제'를 구축하여 식곤증과 폭식을 원천 차단합니다." 
         },
         { 
-            t: "17:30", title: "대사 스위치 OFF (저녁 마감)", 
-            action: "18:00 이전 식사 완료 후 야간 16시간 단식 진입", 
-            detail: "저녁 마감은 야간 인슐린 수치를 최저로 낮추어 몸을 '저장 모드'에서 '지방 연소 모드'로 강제 전환시킵니다. 수면 중 대사 효율을 극대화합니다.", 
-            pts: 20, crit: true 
+            t: "12:00", title: "인크레틴 시퀀스 (Sequence)", pts: 15, crit: true, 
+            action: "채소 → 단백질 → 탄수화물 순서 고수", 
+            detail: "영양소 입력 순서를 바꾸는 것만으로도 위 배출 속도가 물리적으로 지연됩니다. 탄수화물이 가장 마지막에 흡수되어 인슐린 스파이크를 최소화하고 인크레틴 효율을 극대화합니다." 
         },
         { 
-            t: "20:00", title: "근육 방어 (Muscle Shield)", 
-            action: "허벅지/코어 중심의 저항성(근력) 운동 30분 실천", 
-            detail: "감량 중 근손실 방어 계수(γ)를 사수하여 기초대사량 저하를 막습니다. 근육은 혈당을 태우는 가장 효율적인 용광로입니다.", 
-            pts: 15 
+            t: "12:50", title: "글루코스 클리어런스 (Walk)", pts: 15, crit: true, 
+            action: "식후 40분 이내 빠른 걷기 40분", 
+            detail: "인슐린의 도움 없이도 근육의 GLUT4 수용체를 강제 활성화하여 혈액 속 포도당을 직접 연소시키는 마법의 골든타임입니다. 당분이 지방으로 저장되는 경로를 즉시 차단합니다." 
         },
         { 
-            t: "23:00", title: "호르몬 복구 수면", 
-            action: "완전 암막 상태에서 7시간 이상 양질의 숙면", 
-            detail: "깊은 수면은 식욕 억제 호르몬 렙틴을 정상화하고 스트레스 호르몬 코르티솔을 낮추어 내일의 최적 대사 환경을 준비합니다.", 
-            pts: 10 
+            t: "19:00", title: "저녁 마감 (Metabolic Switch)", pts: 20, crit: true, 
+            action: "19시 이전 마지막 식사 완료 후 단식", 
+            detail: "인슐린 농도를 기저 수준으로 낮추어 신체를 '저장 모드'에서 '지방 연소 모드'로 강제 전환시킵니다. 야간 14시간 단식은 체지방 감소율을 결정하는 가장 핵심 변수입니다." 
+        },
+        { 
+            t: "20:30", title: "근육 방어 보호막 (Muscle Shield)", pts: 10, 
+            action: "스쿼트 등 대근육 중심 근력운동 30분", 
+            detail: "단식 진입 초기 단계에서의 근력 운동은 마이오카인을 분비시켜 전신의 인크레틴 감수성(γ)을 높입니다. 감량 중 기초대사량 저하를 막는 방패입니다." 
+        },
+        { 
+            t: "22:00", title: "멜라토닌 세이프가드", pts: 5, 
+            action: "블루라이트 차단 및 실내 조도 낮추기", 
+            detail: "블루라이트 차단은 인크레틴 분비 주기를 조절하는 멜라토닌 합성을 돕습니다. 밤사이 호르몬 재생 효율을 높여 내일 아침의 대사 유연성을 준비합니다." 
+        },
+        { 
+            t: "23:00", title: "심층 대사 복구 (Deep Sleep)", pts: 5, 
+            action: "완전 암막 환경에서 7~8시간 숙면", 
+            detail: "수면 중에는 식욕 조절 호르몬 렙틴이 정상화되고 코르티솔이 낮아집니다. 부족한 잠은 다음 날 인크레틴 민감도를 대폭 하락시켜 비정상적 허기를 유발합니다." 
         }
     ];
+
+    const nudges = {
+        clinical: {
+            master: "최적의 인크레틴 효율($\alpha, \beta$)이 달성되었습니다. 현재 AMPK 활성화 경로가 지방 연소를 주도하고 있습니다.",
+            achiever: "안정적 궤도입니다. 시퀀스 식사와 산책으로 GLP-1 분비 지속 시간을 20% 더 연장할 수 있습니다.",
+            reset: "대사 스위치가 정체되었습니다. 19:00 저녁 마감을 통한 인슐린 기저치 하향이 정밀 요구됩니다."
+        },
+        driver: {
+            master: "완벽합니다! 이 순응도면 예측 모델보다 1주일 빨리 목표에 도달할 수 있습니다. 계속 밀어붙이세요.",
+            achiever: "나쁘지 않지만, Master 등급까지 조금 남았습니다. 식후 산책을 타협하지 마십시오.",
+            reset: "경고: 현재 대사 리듬이 무너졌습니다. 지금 즉시 단식 모드에 진입하여 인슐린 스파이크를 막으세요!"
+        },
+        empathetic: {
+            master: "오늘 정말 고생 많으셨어요! 대표님의 노력이 세포 하나하나를 깨우고 있습니다. 편안하게 숙면하세요.",
+            achiever: "차근차근 잘하고 계세요. 점심 산책 하나만 더 더해도 몸이 훨씬 가벼워지는 걸 느끼실 거예요.",
+            reset: "오늘 조금 힘든 하루였나요? 괜찮습니다. 내일 아침 햇빛 리셋부터 다시 시작해 봐요. 저희가 도울게요."
+        }
+    };
 
     let simChart, trendChart;
     const dateInput = document.getElementById('target-date');
     dateInput.value = new Date().toISOString().split('T')[0];
 
-    function init() {
-        renderList();
-        loadAll();
-        renderModalContent(); // 모달 가이드 내용 생성
-    }
+    function init() { renderList(); loadAll(); renderModalContent(); }
 
     function renderModalContent() {
-        const html = routine.map(r => `
-            <div class="guide-h">${r.t} | ${r.title}</div>
-            <div class="guide-sec">
-                • <b>상세 행동 가이드:</b> ${r.action}<br>
-                • <b>핵심 임상 기전:</b> ${r.detail}
-            </div>
-        `).join('');
-        document.getElementById('modal-body-content').innerHTML = html;
-    }
-
-    function toggleHelpModal() {
-        const modal = document.getElementById('help-modal');
-        modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
-    }
-
-    function renderList() {
-        document.getElementById('routine-list').innerHTML = routine.map((item, i) => `
-            <div class="item ${item.crit ? 'critical' : ''}" onclick="toggleTask(${i})">
-                <input type="checkbox" id="task-${i}" style="width:22px; height:22px;">
-                <div style="flex:1">
-                    <span style="font-size:0.75rem; font-weight:800; color:var(--primary);">${item.t} 핵심행동</span>
-                    <span style="display:block; font-weight:800; font-size:1rem; margin:3px 0;">${item.title}</span>
-                    <div style="font-size:0.75rem; color:var(--gray); line-height:1.4;">${item.action}</div>
-                    <span style="position:absolute; right:20px; top:20px; font-weight:800; color:var(--success);">+${item.pts}</span>
+        document.getElementById('modal-guide-body').innerHTML = routine.map(r => `
+            <div class="guide-step">
+                <span class="guide-time">${r.t}</span>
+                <span class="guide-title">${r.title}</span>
+                <div class="guide-box">
+                    <span class="guide-label">Action Protocol</span>
+                    <p class="guide-text"><b>${r.action}</b></p>
+                    <span class="guide-label" style="margin-top:10px;">Clinical Mechanism</span>
+                    <p class="guide-text" style="color:var(--primary);">${r.detail}</p>
                 </div>
             </div>
         `).join('');
     }
 
+    function toggleModal(id) { const modal = document.getElementById(id); modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex'; }
+
+    function renderList() {
+        document.getElementById('routine-list').innerHTML = routine.map((item, i) => `
+            <div class="item ${item.crit ? 'critical' : ''}" id="item-${i}" onclick="toggleTask(${i})">
+                <div style="flex:1">
+                    <span style="font-size:0.75rem; font-weight:800; color:var(--primary);">${item.t}</span>
+                    <span style="display:block; font-weight:800; font-size:1rem; margin:3px 0;">${item.title}</span>
+                    <div style="font-size:0.75rem; color:var(--gray);">${item.action}</div>
+                </div>
+                <div class="score-badge">+${item.pts}</div>
+            </div>
+        `).join('');
+    }
+
     function toggleTask(i) {
-        const cb = document.getElementById(`task-${i}`);
-        cb.checked = !cb.checked;
+        document.getElementById(`item-${i}`).classList.toggle('checked');
         saveDaily();
     }
 
     function saveDaily() {
-        const hist = JSON.parse(localStorage.getItem('inc_advanced_h') || '{}');
-        const checks = routine.map((_, i) => document.getElementById(`task-${i}`).checked);
+        const hist = JSON.parse(localStorage.getItem('inc_v26_h') || '{}');
+        const checks = routine.map((_, i) => document.getElementById(`item-${i}`).classList.contains('checked'));
         const score = routine.reduce((sum, item, i) => sum + (checks[i] ? item.pts : 0), 0);
-        const weight = document.getElementById('daily-weight').value;
-        hist[dateInput.value] = { score, checks, weight };
-        localStorage.setItem('inc_advanced_h', JSON.stringify(hist));
+        hist[dateInput.value] = { score, checks, weight: document.getElementById('daily-weight').value };
+        localStorage.setItem('inc_v26_h', JSON.stringify(hist));
         saveProfile();
         updateTrendChart();
     }
@@ -233,29 +268,29 @@
             gw: document.getElementById('p-gw').value, isDiabetic: document.getElementById('p-diabetic').value, 
             exercise: document.getElementById('p-exercise').value
         };
-        localStorage.setItem('inc_advanced_p', JSON.stringify(p));
+        localStorage.setItem('inc_v26_p', JSON.stringify(p));
     }
 
     function loadAll() {
-        const p = JSON.parse(localStorage.getItem('inc_advanced_p') || '{}');
+        const p = JSON.parse(localStorage.getItem('inc_v26_p') || '{}');
         if(p.start) {
-            document.getElementById('p-start').value = p.start;
-            document.getElementById('p-h').value = p.h;
-            document.getElementById('p-sw').value = p.sw;
-            document.getElementById('p-cw').value = p.cw;
-            document.getElementById('p-gw').value = p.gw;
-            document.getElementById('p-diabetic').value = p.isDiabetic;
+            document.getElementById('p-start').value = p.start; document.getElementById('p-h').value = p.h;
+            document.getElementById('p-sw').value = p.sw; document.getElementById('p-cw').value = p.cw;
+            document.getElementById('p-gw').value = p.gw; document.getElementById('p-diabetic').value = p.isDiabetic;
             document.getElementById('p-exercise').value = p.exercise;
         }
-        const hist = JSON.parse(localStorage.getItem('inc_advanced_h') || '{}');
+        const hist = JSON.parse(localStorage.getItem('inc_v26_h') || '{}');
         const data = hist[dateInput.value];
-        routine.forEach((_, i) => document.getElementById(`task-${i}`).checked = data ? data.checks[i] : false);
+        routine.forEach((_, i) => {
+            const el = document.getElementById(`item-${i}`);
+            if(data && data.checks[i]) el.classList.add('checked'); else el.classList.remove('checked');
+        });
         document.getElementById('daily-weight').value = (data && data.weight) ? data.weight : '';
         updateTrendChart();
     }
 
     function updateTrendChart() {
-        const hist = JSON.parse(localStorage.getItem('inc_advanced_h') || '{}');
+        const hist = JSON.parse(localStorage.getItem('inc_v26_h') || '{}');
         const sortedDates = Object.keys(hist).sort();
         const weights = sortedDates.map(d => hist[d].weight).filter(w => w);
         const labels = sortedDates.filter(d => hist[d].weight).map(d => d.slice(5));
@@ -266,7 +301,7 @@
             if(trendChart) trendChart.destroy();
             trendChart = new Chart(ctx, {
                 type: 'line',
-                data: { labels: labels, datasets: [{ label: '실제체중(kg)', data: weights, borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, 0.1)', fill: true, tension: 0.3, pointRadius: 4 }] },
+                data: { labels: labels, datasets: [{ data: weights, borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, 0.1)', fill: true, tension: 0.3, pointRadius: 4 }] },
                 options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false } } }
             });
         }
@@ -280,32 +315,38 @@
         const gw = parseFloat(document.getElementById('p-gw').value);
 
         if(h > 0 && cw > 0) document.getElementById('bmi-v').innerText = (cw / (h * h)).toFixed(1);
-        if(sw && gw && cw) {
-            const ach = Math.max(0, Math.min(100, ((sw - cw) / (sw - gw)) * 100));
-            document.getElementById('ach-v').innerText = ach.toFixed(1) + '%';
-        }
+        if(sw && gw && cw) document.getElementById('ach-v').innerText = Math.max(0, Math.min(100, ((sw - cw) / (sw - gw)) * 100)).toFixed(1) + '%';
 
-        const scores = Object.values(hist).map(d => d.score);
-        const avg = scores.length ? Math.round(scores.reduce((a,b)=>a+b)/scores.length) : 0;
-        document.getElementById('avg-v').innerText = avg;
-        
-        const rx = document.getElementById('ai-rx');
-        if(avg >= 85) rx.innerHTML = "<b>[Master]</b> 인크레틴 효율 극대화 상태입니다. 저녁 조기 마감이 밤사이 지방 연소를 돕습니다.";
-        else rx.innerHTML = "<b>[Achiever]</b> 안정적 궤도입니다. 프리로드 실천율을 높여 인슐린 저항성을 개선하세요.";
+        const currentScore = (hist[dateInput.value] && hist[dateInput.value].score) || 0;
+        document.getElementById('today-score').innerText = currentScore;
+        document.getElementById('burn-rate').innerText = Math.min(100, Math.round(currentScore * 1.15)) + "%";
+
+        updateAIStatus(currentScore);
+    }
+
+    function updateAIStatus(score = null) {
+        if(score === null) score = parseInt(document.getElementById('today-score').innerText);
+        const persona = document.getElementById('ai-persona').value;
+        const nudgeEl = document.getElementById('ai-nudge');
+        let state = "reset";
+        if(score >= 85) state = "master"; else if(score >= 60) state = "achiever";
+        nudgeEl.innerText = nudges[persona][state];
     }
 
     function runComprehensiveAnalysis() {
         const cw = parseFloat(document.getElementById('p-cw').value);
         const isDiabetic = document.getElementById('p-diabetic').value === 'yes';
         const exCount = parseInt(document.getElementById('p-exercise').value);
-        
+        const avgScore = parseInt(document.getElementById('today-score').innerText) || 80;
+
         document.getElementById('sim-view').style.display = 'block';
         const alpha = isDiabetic ? 0.75 : 1.15;
+        const beta = avgScore >= 85 ? 1.35 : 1.0;
         const gamma = 1 + (Math.min(exCount, 5) * 0.05);
 
         let labels = ["현재"], weights = [cw], tempW = cw;
         for (let w = 1; w <= 4; w++) {
-            tempW -= (w === 1 ? 1.6 : 0.8) * alpha * gamma;
+            tempW -= (w === 1 ? 1.6 : 0.8) * alpha * beta * gamma;
             labels.push(w + "주");
             weights.push(tempW.toFixed(1));
         }
@@ -321,25 +362,17 @@
     }
 
     function exportToExcel() {
-        const p = JSON.parse(localStorage.getItem('inc_advanced_p') || '{}');
-        const h = JSON.parse(localStorage.getItem('inc_advanced_h') || '{}');
+        const p = JSON.parse(localStorage.getItem('inc_v26_p') || '{}');
+        const h = JSON.parse(localStorage.getItem('inc_v26_h') || '{}');
         const heightM = parseFloat(p.h) / 100;
-        
         const data = Object.keys(h).sort().map(date => {
-            const weight = parseFloat(h[date].weight) || 0;
-            return {
-                "날짜": date,
-                "루틴점수": h[date].score,
-                "기록체중(kg)": weight,
-                "실시간 BMI": weight > 0 ? (weight / (heightM * heightM)).toFixed(1) : "-",
-                "실천항목": h[date].checks.map((c, i) => c ? routine[i].title : null).filter(v => v).join(", ")
-            };
+            const w = parseFloat(h[date].weight) || 0;
+            return { "날짜": date, "루틴점수": h[date].score, "체중(kg)": w, "BMI": w > 0 ? (w / (heightM * heightM)).toFixed(1) : "-", "실천내용": h[date].checks.map((c, i) => c ? routine[i].title : null).filter(v => v).join(", ") };
         });
-
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet([p]), "User_Profile");
         XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), "Metabolic_Clinical_Log");
-        XLSX.writeFile(wb, `IncretinMasterPro_v2.5_RWE_Data.xlsx`);
+        XLSX.writeFile(wb, `IncretinA_i_v2.6_ClinicalData.xlsx`);
     }
 
     dateInput.addEventListener('change', loadAll);
@@ -348,5 +381,3 @@
 </script>
 </body>
 </html>
-
-
